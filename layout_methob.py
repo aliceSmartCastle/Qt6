@@ -88,6 +88,8 @@ def layout_modes(widgets: tuple | list, self: QWidget, layout: typing.Union[QVBo
             elif len(margins) > 4:
                 margins = (0, 0, 0, 0)
             layout.setContentsMargins(*margins)
+        case 'hbox':
+            general_layout(widgets=widgets, self=self, layout=layout)
         case "hbox_customer_distance":
             safe_offest = abs(total_index - item_location)
             if safe_offest > total_index:
