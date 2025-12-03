@@ -1,0 +1,12 @@
+[Desktop Entry]
+StartupWMClass=IconTest
+Version=1.0
+Name=IconTest
+Type=Application
+Path=/home/istarnight/PythonLearn/Qt6
+Categories=Utility
+Exec=/usr/bin/python3.13 /home/istarnight/PythonLearn/Qt6/windosIcon.py
+Icon=/home/istarnight/PythonLearn/Qt6/Icon/bob.png
+Comment=test desktop file
+Terminal=false
+StartupNotify=true

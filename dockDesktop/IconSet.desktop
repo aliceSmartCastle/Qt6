@@ -1,0 +1,12 @@
+[Desktop Entry]
+StartupWMClass=IconSet
+Version=1.0
+Name=IconSet
+Type=Application
+Path=/home/istarnight/PythonLearn/Qt6
+Categories=Utility
+Exec=/usr/bin/python3.13 /home/istarnight/PythonLearn/Qt6/Iconfinish.py
+Icon=/home/istarnight/PythonLearn/Qt6/Icon/bird-scepter.png
+Comment=test finally file
+Terminal=false
+StartupNotify=true
