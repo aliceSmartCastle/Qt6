@@ -1,9 +1,10 @@
-import typing
+from typing import Union, Literal
 
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QFormLayout, QPushButton
 
 
-def layout_setting(layout: QVBoxLayout | QHBoxLayout, *widgets) -> None:
+def layout_setting(layout: Union[QVBoxLayout, QHBoxLayout, QGridLayout], *widgets) -> None:
     """
     add widgets to layout
     """
@@ -13,22 +14,29 @@ def layout_setting(layout: QVBoxLayout | QHBoxLayout, *widgets) -> None:
         layout.addWidget(widgets[makes])
 
 
-def general_layout(widgets: tuple, self: QWidget, layout: typing.Union[QVBoxLayout, QHBoxLayout]):
+def general_layout(widgets: tuple, self: QWidget, layout: Union[QVBoxLayout, QHBoxLayout, QGridLayout],
+                   ):
     layout_setting(layout, *widgets)
     self.setLayout(layout)
 
 
-def layout_modes(widgets: tuple | list, self: QWidget, layout: typing.Union[QVBoxLayout, QHBoxLayout],
-                 mode: typing.Literal[
+def layout_modes(widgets: tuple | list, self: QWidget,
+                 layout: Union[QVBoxLayout, QHBoxLayout, QGridLayout, QFormLayout],
+                 mode: Literal[
                      'vbox', 'vbox_top', 'vbox_down', 'vbox_center', 'vbox_factor', 'vbox_customer_distance', 'vbox_space',
-                     'hbox', 'hbox_left', 'hbox_right', 'hbox_center', 'hbox_customer_distance', 'hbox_space', 'hbox_margins', 'vbox_margins'] = 'vbox'
-                 , item_location: int = 0, item_distance: typing.Union[list[int], tuple[int]] = None,
+                     'hbox', 'hbox_left', 'hbox_right', 'hbox_center', 'hbox_customer_distance', 'hbox_space', 'hbox_margins', 'grid', 'vbox_margins', 'form'] = 'vbox'
+                 , item_location: int = 0, item_distance: Union[list[int], tuple[int]] = None,
                  space_distance: int = 10,
-                 margins: tuple[int, int, int, int] = None):
+                 margins: tuple[int, int, int, int] = None, alignment: tuple = None,
+                 widget_position: tuple = None, element_name: Union[list, tuple] = None):
     total_index = len(widgets)
     if item_distance is None:
         lad_list = [i for i in range(total_index)]
         item_distance = round(sum(lad_list) / len(lad_list))
+    if alignment is None:
+        alignment = [Qt.AlignmentFlag(0) for _ in range(total_index)]
+    if element_name is None:
+        element_name = ['' for _ in range(total_index)]
 
     match mode:
 
@@ -85,9 +93,10 @@ def layout_modes(widgets: tuple | list, self: QWidget, layout: typing.Union[QVBo
         case 'vbox_margins':
             if margins is None:
                 general_layout(widgets=widgets, self=self, layout=layout)
-            elif len(margins) > 4:
+            elif len(margins) >= 4:
                 margins = (0, 0, 0, 0)
-            layout.setContentsMargins(*margins)
+                general_layout(widgets=widgets, self=self, layout=layout)
+                layout.setContentsMargins(*margins)
         case 'hbox':
             general_layout(widgets=widgets, self=self, layout=layout)
         case "hbox_customer_distance":
@@ -112,4 +121,30 @@ def layout_modes(widgets: tuple | list, self: QWidget, layout: typing.Union[QVBo
             elif len(margins) > 4:
                 margins = (0, 0, 0, 0)
             layout.setContentsMargins(*margins)
+        case 'grid':
+            if widget_position is None:
+                general_layout(widgets=widgets, self=self, layout=layout)
+            elif widget_position is not None:
+                if len(widget_position) == total_index:
+                    row_column = [(x[0], x[1]) for x in widget_position]
+                    for i in range(total_index):
+                        layout.addWidget(widgets[i], row_column[i][0], row_column[i][1], alignment=alignment[i])
+                else:
+                    general_layout(widgets=widgets, self=self, layout=layout)
+        case 'form':
+
+            if len(element_name) == total_index:
+                for i in range(total_index):
+                    if not isinstance(widgets[i], QPushButton):
+                        layout.addRow(element_name[i], widgets[i])
+
+                    else:
+                        layout.addRow(widgets[i])
+
+
+
+            else:
+                for i in range(total_index):
+                    layout.addRow(widgets[i])
+
     self.setLayout(layout)
