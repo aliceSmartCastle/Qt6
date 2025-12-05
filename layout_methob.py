@@ -1,4 +1,4 @@
-from typing import Union, Literal
+from typing import Union, Literal, Optional, Any
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QFormLayout, QPushButton
@@ -14,21 +14,23 @@ def layout_setting(layout: Union[QVBoxLayout, QHBoxLayout, QGridLayout], *widget
         layout.addWidget(widgets[makes])
 
 
-def general_layout(widgets: tuple, self: QWidget, layout: Union[QVBoxLayout, QHBoxLayout, QGridLayout],
+def general_layout(widgets: Union[tuple[Any], list[Any]], self: QWidget,
+                   layout: Union[Any],
                    ):
     layout_setting(layout, *widgets)
     self.setLayout(layout)
 
 
 def layout_modes(widgets: tuple | list, self: QWidget,
-                 layout: Union[QVBoxLayout, QHBoxLayout, QGridLayout, QFormLayout],
+                 layout: Union[Any],
                  mode: Literal[
                      'vbox', 'vbox_top', 'vbox_down', 'vbox_center', 'vbox_factor', 'vbox_customer_distance', 'vbox_space',
                      'hbox', 'hbox_left', 'hbox_right', 'hbox_center', 'hbox_customer_distance', 'hbox_space', 'hbox_margins', 'grid', 'vbox_margins', 'form'] = 'vbox'
-                 , item_location: int = 0, item_distance: Union[list[int], tuple[int]] = None,
+                 , item_location: int = 0, item_distance: Optional[Union[int, list[int], tuple[int], None]] = None,
                  space_distance: int = 10,
-                 margins: tuple[int, int, int, int] = None, alignment: tuple = None,
-                 widget_position: tuple = None, element_name: Union[list, tuple] = None):
+                 margins: Optional[Union[tuple, None]] = None,
+                 alignment: Union[list[Qt.AlignmentFlag], tuple[Qt.AlignmentFlag], None] = None,
+                 widget_position: Union[tuple, None] = None, element_name: Union[list, tuple, None] = None):
     total_index = len(widgets)
     if item_distance is None:
         lad_list = [i for i in range(total_index)]
@@ -41,15 +43,19 @@ def layout_modes(widgets: tuple | list, self: QWidget,
     match mode:
 
         case 'vbox':
+            assert (isinstance(layout, QVBoxLayout)), "layout type is QVboxLayout"
             general_layout(widgets=widgets, self=self, layout=layout)
         case 'vbox_down':
-            layout.addStretch()
+            if not isinstance(layout, (QGridLayout, QFormLayout)):
+                layout.addStretch()
             general_layout(widgets=widgets, self=self, layout=layout)
         case 'vbox_top':
+            assert (isinstance(layout, QVBoxLayout)), "layout type is QVboxLayout"
             general_layout(widgets=widgets, self=self, layout=layout)
             layout.addStretch()
         case 'hbox_left':
-            layout.addStretch()
+            if not isinstance(layout, (QGridLayout, QFormLayout)):
+                layout.addStretch()
             general_layout(widgets=widgets, self=self, layout=layout)
         case 'vbox_center':
             layout.addStretch()
@@ -83,6 +89,7 @@ def layout_modes(widgets: tuple | list, self: QWidget,
                 if type(total_index) == type(item_distance):
                     layout.setStretchFactor(widgets[i], item_distance)
                 else:
+                    assert (not isinstance(item_distance, int)), "item_distance must be a list or tuple"
                     if len(item_distance) == total_index:
                         layout.setStretchFactor(widgets[i], item_distance[i])
                     else:
@@ -109,6 +116,7 @@ def layout_modes(widgets: tuple | list, self: QWidget,
                     if type(total_index) == type(item_distance):
                         layout.setStretchFactor(widgets[i], item_distance)
                     else:
+                        assert (not isinstance(item_distance, int)), "item_distance must be a list or tuple"
                         layout.setStretchFactor(widgets[i], item_distance[i])
 
         case "hbox_space":
@@ -122,6 +130,7 @@ def layout_modes(widgets: tuple | list, self: QWidget,
                 margins = (0, 0, 0, 0)
             layout.setContentsMargins(*margins)
         case 'grid':
+            assert (isinstance(layout, QGridLayout)), "layout type is QGridLayout"
             if widget_position is None:
                 general_layout(widgets=widgets, self=self, layout=layout)
             elif widget_position is not None:
@@ -132,7 +141,7 @@ def layout_modes(widgets: tuple | list, self: QWidget,
                 else:
                     general_layout(widgets=widgets, self=self, layout=layout)
         case 'form':
-
+            assert (isinstance(layout, QFormLayout)), "layout type is QFormLayout"
             if len(element_name) == total_index:
                 for i in range(total_index):
                     if not isinstance(widgets[i], QPushButton):
