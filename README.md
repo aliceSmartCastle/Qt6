@@ -38,5 +38,5 @@
 ## spinboxDemo.py
  simple watch the pH-value and its reference life thing widget
 ##  TheUSAFes.py
- simple find the the USA holiday name and sate widget
+ simple find the the all USA holiday name and date widget
  
