@@ -33,4 +33,10 @@
    create a simple today feel check widget
 ## RadioButtondemo.py
   please choice your love movie widget
+## ComboWidget.py
+  simple chosen your music gener widget
+## spinboxDemo.py
+ simple watch the pH-value and its reference life thing widget
+##  TheUSAFes.py
+ simple find the the USA holiday name and sate widget
  
