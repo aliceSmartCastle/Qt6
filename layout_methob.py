@@ -141,6 +141,7 @@ def layout_modes(widgets: tuple | list, self: QWidget,
                 else:
                     general_layout(widgets=widgets, self=self, layout=layout)
         case 'form':
+            assert len(element_name) == total_index, 'two variable length must be equal'
             assert (isinstance(layout, QFormLayout)), "layout type is QFormLayout"
             if len(element_name) == total_index:
                 for i in range(total_index):
