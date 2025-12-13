@@ -166,17 +166,22 @@ def complex_layout(main_layout: QGridLayout, paper_layout_widget: tuple[QWidget,
                    sub_layout: tuple[QFormLayout, QFormLayout], paper_one_element: tuple, paper_two_element: tuple,
                    setLayoutWidget: tuple, setLayout_Location: tuple, alignment: tuple, paper_one_widgets: tuple,
                    paper_two_widgets: tuple):
+                       
     altogether_sub_layout = len(sub_layout)
 
-    assert altogether_sub_layout >= 2, "there must be at least 2 sub layouts"
+    assert altogether_sub_layout >= 2 <=6, "there must be bwtween 2-6 sub layouts"
 
     first_sub_layout, *middle_sub_layout, last_sub_layout = sub_layout
 
     widget_paper_one, *widget_paper_middle, widget_paper_two = paper_layout_widget
     if not widget_paper_middle:
         del widget_paper_middle
+    else
+        first_layout,*middle_layout,last_layout=widget_paper_middle
     if not middle_sub_layout:
         del middle_sub_layout
+    else:
+        new_first_layout,*new_middle_layout,new_last_layout = middle_sub_layout
 
     assert len(paper_one_element + paper_two_element) == len(
         paper_one_widgets + paper_two_widgets), "total widget and element length must be equal"
