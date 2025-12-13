@@ -1,7 +1,7 @@
 from typing import Union, Literal, Optional, Any
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QFormLayout, QPushButton
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QFormLayout, QPushButton, QTabWidget
 
 
 def layout_setting(layout: Union[QVBoxLayout, QHBoxLayout, QGridLayout], *widgets) -> None:
@@ -30,7 +30,8 @@ def layout_modes(widgets: tuple | list, self: QWidget,
                  space_distance: int = 10,
                  margins: Optional[Union[tuple, None]] = None,
                  alignment: Union[list[Qt.AlignmentFlag], tuple[Qt.AlignmentFlag], None] = None,
-                 widget_position: Union[tuple, None] = None, element_name: Union[list, tuple, None] = None):
+                 widget_position: Union[tuple, None] = None, element_name: Union[list, tuple, None] = None
+                 ):
     total_index = len(widgets)
     if item_distance is None:
         lad_list = [i for i in range(total_index)]
@@ -158,3 +159,43 @@ def layout_modes(widgets: tuple | list, self: QWidget,
                     layout.addRow(widgets[i])
 
     self.setLayout(layout)
+
+
+def complex_layout(main_layout: QGridLayout, paper_layout_widget: tuple[QWidget, QWidget],
+                   tad_paper_name: tuple[str, str], Tad_layout: QTabWidget,
+                   sub_layout: tuple[QFormLayout, QFormLayout], paper_one_element: tuple, paper_two_element: tuple,
+                   setLayoutWidget: tuple, setLayout_Location: tuple, alignment: tuple, paper_one_widgets: tuple,
+                   paper_two_widgets: tuple):
+    altogether_sub_layout = len(sub_layout)
+
+    assert altogether_sub_layout >= 2, "there must be at least 2 sub layouts"
+
+    first_sub_layout, *middle_sub_layout, last_sub_layout = sub_layout
+
+    widget_paper_one, *widget_paper_middle, widget_paper_two = paper_layout_widget
+    if not widget_paper_middle:
+        del widget_paper_middle
+    if not middle_sub_layout:
+        del middle_sub_layout
+
+    assert len(paper_one_element + paper_two_element) == len(
+        paper_one_widgets + paper_two_widgets), "total widget and element length must be equal"
+
+    for item in range(len(paper_one_element)):
+        first_sub_layout.addRow(paper_one_element[item], paper_one_widgets[item])
+    for items in range(len(paper_two_element)):
+        last_sub_layout.addRow(paper_two_element[items], paper_two_widgets[items])
+
+    widget_paper_one.setLayout(first_sub_layout)
+    widget_paper_two.setLayout(last_sub_layout)
+
+    assert len(paper_layout_widget) == len(tad_paper_name)
+
+    for tad_property in range(len(paper_layout_widget)):
+        Tad_layout.addTab(paper_layout_widget[tad_property], tad_paper_name[tad_property])
+
+    assert len(setLayout_Location) == len(setLayoutWidget) == len(alignment), "three parameter length must be equal"
+
+    for grid_virtue in range(len(setLayoutWidget)):
+        main_layout.addWidget(setLayoutWidget[grid_virtue], *setLayout_Location[grid_virtue],
+                              alignment=alignment[grid_virtue])
