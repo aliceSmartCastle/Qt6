@@ -176,7 +176,7 @@ def complex_layout(main_layout: QGridLayout, paper_layout_widget: tuple[QWidget,
     widget_paper_one, *widget_paper_middle, widget_paper_two = paper_layout_widget
     if not widget_paper_middle:
         del widget_paper_middle
-    else
+    else:
         first_layout,*middle_layout,last_layout=widget_paper_middle
     if not middle_sub_layout:
         del middle_sub_layout
