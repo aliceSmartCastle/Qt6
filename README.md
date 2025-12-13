@@ -39,4 +39,9 @@
  simple watch the pH-value and its reference life thing widget
 ##  TheUSAFes.py
  simple find the the all USA holiday name and date widget
+## dateEditDemo.py
+ the simple output all country holiday and time change of the day widget
+## sprtScreen.py
+it's can output the sprt(number) the value effect
+ the simple output the sprt(number) and it is value change widget
  
